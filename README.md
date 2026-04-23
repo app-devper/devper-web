@@ -42,13 +42,6 @@ npm run build
 firebase deploy --only hosting:devper-web
 ```
 
-### ตั้งค่า custom domain (devper.app)
-
-1. `firebase hosting:sites:create devper-web --project devperpos` (ถ้ายังไม่มี site)
-2. ใน Firebase console → Hosting → เลือก site `devper-web` → Add custom domain → `devper.app`
-3. ตั้งค่า DNS ตามที่ Firebase แจ้ง (A records หรือ TXT record)
-4. Deploy: `firebase deploy --only hosting:devper-web`
-
 ## โครงสร้าง
 
 ```
