@@ -1,6 +1,6 @@
 ---
 name: git-flow
-description: Git flow branching for app-devper/devper-web — main (production line, manual deploy), develop (default, integration), feature/*, release/*, hotfix/*. Use when starting new work, opening a PR, cutting a release, hotfixing production, or deciding which base branch a change targets.
+description: Git flow branching for app-devper/devper-web — main (production, Cloudflare Pages deploys on merge), develop (default, integration), feature/*, release/*, hotfix/*. Use when starting new work, opening a PR, cutting a release, hotfixing production, or deciding which base branch a change targets.
 ---
 
 # git-flow — branching + release model for devper-web
@@ -11,7 +11,7 @@ The stage-by-stage flow lives in `dev-flow`; this skill owns the branch rules.
 
 | Branch | Role | PR target | After merge |
 |---|---|---|---|
-| `main` | production line — merge deploys nothing (manual deploy) | — | back-merge into `develop` |
+| `main` | production — every merge deploys (Cloudflare Pages) | — | back-merge into `develop` |
 | `develop` | default branch, integration | — | — |
 | `feature/<x>` | new work, fixes for next release | `develop` | delete branch |
 | `release/<x.y.z>` | release cut from `develop` | `main` | tag, back-merge `main` → `develop`, delete branch |
@@ -22,7 +22,7 @@ The `check` workflow (job `build`) runs on every PR and on pushes to
 
 ## What merging `main` does
 
-**No Cloud Build trigger** — merging `main` deploys nothing. Deploy by hand from a clean `main` checkout after the release lands.
+Merging into `main` makes Cloudflare Pages (project `devper-web`, GitHub integration, production branch `main`) run `npm run build` and publish `dist/` as production at devper.app. Every other branch and PR gets a preview at `<id>.devper-web.pages.dev`. No Cloud Build trigger; nothing to deploy by hand.
 
 Version: No version file — the git tag is the version. The release PR needs no version commit.
 
