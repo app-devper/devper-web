@@ -26,7 +26,3 @@ dist-ssr
 # TS
 *.tsbuildinfo
 
-# Firebase
-.firebase
-firebase-debug.log
-firebase-debug.*.log

@@ -7,13 +7,13 @@ Marketing / portal site สำหรับโดเมน [devper.app](https://d
 - **Vite 8** + **React 19** + **TypeScript 6**
 - **Tailwind CSS 4** (ผ่าน `@tailwindcss/vite`)
 - **React Router 7**
-- Deploy บน **Firebase Hosting** (site target `devper-web`)
+- Deploy บน **Cloudflare Pages** (project `devper-web`, production branch `main`, โดเมน devper.app)
 
 ## Requirements
 
 - Node.js 20+
 - npm 10+
-- (สำหรับ deploy) Firebase CLI + access ไปยัง project `devperpos`
+- (สำหรับดูผล deploy) สิทธิ์เข้า Cloudflare dashboard ของบัญชีที่ถือ devper.app
 
 ## Development
 
@@ -37,9 +37,16 @@ npm run lint
 
 ## Deploy
 
+Cloudflare Pages ต่อกับ GitHub repo นี้โดยตรง ไม่มีคำสั่ง deploy ด้วยมือ
+
+- push เข้า `main` → Pages รัน `npm run build` แล้วเผยแพร่ `dist/` เป็น production ที่ https://devper.app
+- branch อื่นและ PR → ได้ preview ที่ `https://<id>.devper-web.pages.dev`
+
+ดูผลได้จาก check "Cloudflare Pages" บน commit นั้นใน GitHub:
+
 ```bash
-npm run build
-firebase deploy --only hosting:devper-web
+gh api "repos/app-devper/devper-web/commits/$(git rev-parse origin/main)/check-runs" \
+  --jq '.check_runs[] | select(.name=="Cloudflare Pages") | "\(.conclusion) \(.details_url)"'
 ```
 
 ## โครงสร้าง
@@ -57,8 +64,6 @@ devper-web/
 │   ├── main.tsx          # Entry point
 │   ├── index.css         # Tailwind + global styles
 │   └── vite-env.d.ts
-├── firebase.json
-├── .firebaserc
 ├── vite.config.ts
 ├── tsconfig.json
 ├── tsconfig.app.json
@@ -69,6 +74,14 @@ devper-web/
 
 ## หมายเหตุ
 
-- เว็บนี้เป็น **static export (SPA)** ไม่มี backend — ใช้ `rewrite` ใน `firebase.json` ส่งทุก path กลับไปที่ `/index.html` (client-side routing)
+- เว็บนี้เป็น **static export (SPA)** ไม่มี backend — Cloudflare Pages ส่งทุก path ที่ไม่ตรงกับไฟล์กลับไปที่ `/index.html` เอง (SPA mode เพราะไม่มี `404.html`) จึงใช้ client-side routing ได้
 - แบรนด์: DevPer — ระบบ POS และการจัดการร้านค้าครบวงจร
 - เชื่อมโยงกับ [devper-api](../devper-api/) (reverse proxy Cloud Run) สำหรับบริการ backend จริง
+
+## Agent skills
+
+The generic Claude Code / Codex skills (`coding-standards`, `tdd-workflow`,
+`grilling`, …) and the `ecc` rules are not in this repo. Every app-devper
+repo shares them from [app-devper/agent-skills](https://github.com/app-devper/agent-skills):
+clone it and run its `install.sh` once per machine. Only the skills about this
+repo live in `.agents/skills/`: `dev-flow`, `git-flow`, `pr`.
