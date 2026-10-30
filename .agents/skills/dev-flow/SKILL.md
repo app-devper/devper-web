@@ -98,7 +98,7 @@ directly.
 4. **PR:** `gh pr create --base main --title "release: vX.Y.Z" --body "<changelog: PR list since last tag>"`.
    CI `build` must be green.
 5. **Land:** `pr` skill (squash into `main`).
-6. **Deploy:** **No Cloud Build trigger** — merging `main` deploys nothing. Deploy by hand from a clean `main` checkout after the release lands.
+6. **Deploy:** Merging into `main` makes Cloudflare Pages (project `devper-web`, GitHub integration, production branch `main`) run `npm run build` and publish `dist/` as production at devper.app. No Cloud Build trigger; nothing to deploy by hand.
 7. **Tag:** Tag by hand — nothing tags automatically.
    ```bash
    git checkout main && git pull --ff-only
@@ -107,14 +107,14 @@ directly.
    ```
 8. **Back-merge** `main` → `develop` (`git-flow`; the `pr` skill does it
    after a PR into `main`).
-9. **Check the deploy:**
+9. **Check the deploy:** the "Cloudflare Pages" check on the squash commit, then the live site.
    ```bash
-   git checkout main && git pull --ff-only
-   npm ci && npm run build
-   firebase deploy --only hosting:devper-web --project devperpos
+   gh api "repos/app-devper/devper-web/commits/$(git rev-parse origin/main)/check-runs" \
+     --jq '.check_runs[] | select(.name=="Cloudflare Pages") | "\(.conclusion) \(.details_url)"'
+   curl -sI https://devper.app | grep -iE '^(server|cf-ray)'
    ```
 
-**Exit:** tag `vX.Y.Z` on `main`, app deployed by hand from `main`, `develop` contains `main`.
+**Exit:** tag `vX.Y.Z` on `main`, the Cloudflare Pages check on that commit `success`, `develop` contains `main`.
 
 ## 9. Hotfix — production is broken
 

@@ -47,7 +47,7 @@ Feature PRs target `develop`; release/hotfix PRs target `main` (see
    Pushed directly on purpose (admin only; GitHub reports
    "Bypassed rule violations" — expected). Then check
    `gh run list --branch develop -L 1` is green.
-   Nothing deploys automatically — remind the user to deploy by hand (see `dev-flow` stage 8) and to tag.
+   The merge into `main` has started the Cloudflare Pages deploy — follow `dev-flow` stage 8 to tag and check it.
 
 7. **Report**: PR number + URL, squash commit SHA on the base branch, branch
    deleted local + remote, and for `main` whether tag and deploy are done.
