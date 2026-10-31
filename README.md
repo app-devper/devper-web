@@ -75,6 +75,7 @@ devper-web/
 ## หมายเหตุ
 
 - เว็บนี้เป็น **static export (SPA)** ไม่มี backend — Cloudflare Pages ส่งทุก path ที่ไม่ตรงกับไฟล์กลับไปที่ `/index.html` เอง (SPA mode เพราะไม่มี `404.html`) จึงใช้ client-side routing ได้
+- `public/_headers` ให้ Cloudflare Pages cache ไฟล์ใต้ `/assets/` (มี hash ในชื่อ) นานหนึ่งปีแบบ immutable ส่วน HTML ใช้ค่า default ของ Pages (`max-age=0, must-revalidate`) จึงเห็น deploy ใหม่ทันทีที่โหลดครั้งถัดไป
 - แบรนด์: DevPer — ระบบ POS และการจัดการร้านค้าครบวงจร
 - เชื่อมโยงกับ [devper-api](../devper-api/) (reverse proxy Cloud Run) สำหรับบริการ backend จริง
 
